@@ -2,6 +2,28 @@ from   datetime import datetime
 from   glob     import glob
 import os
 
+def SelectMandatory(Constrains, MaxVariables, DirOutput):
+    Mandatory = []
+    for Punt in range(MaxVariables):
+        Mandatory.append(0)
+    for Row in range(len(Constrains)):
+        if len(Constrains[Row]) == 1:
+            Mandatory[Constrains[Row][0]] = 1
+    print(Mandatory, file = open(DirOutput + "MANDATORY.TXT", "w"))
+    return Mandatory
+
+def CreateRestricciones(Constrains, MaxVariables):
+    """Método que toma las restricciones de la instancia y crea la matriz correspondiente para tratarla
+    """
+    Restricciones = []
+    for Row in range(len(Constrains)):
+        Restricciones.append([])
+        for Col in range(MaxVariables):
+            Restricciones[Row].append(0)
+    for Row in range(len(Constrains)):
+        for Col in range(len(Constrains[Row])):
+            Restricciones[Row][Constrains[Row][Col]] = 1
+    return Restricciones  
 #------------------------------------------------------------------------------
 def Cronometro(Inicio):
     Fin = datetime.now()

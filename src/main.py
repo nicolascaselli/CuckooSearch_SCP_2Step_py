@@ -10,8 +10,8 @@ if __name__ == '__main__':
         BestKnown                           = Tools.GetBestKnown(Instancia)        
         Cost, Constrains, Coverage, Order   = Tools.ReadInstancia("INPUT/" + Instancia + ".TXT")
         MaxVariables                        = len(Cost)
-        Restricciones                       = CreateRestricciones(Constrains, MaxVariables)
-        Mandatory                           = SelectMandatory(Constrains, MaxVariables)
+        Restricciones                       = Tools.CreateRestricciones(Constrains, MaxVariables)
+        Mandatory                           = SelectMandatory(Constrains, MaxVariables, DirOutput)
         Tools.SaveInstance(Cost, Constrains, Restricciones, Coverage, DirOutput, 1)
         cs.run_CS()
     
