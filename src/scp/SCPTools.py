@@ -1,6 +1,21 @@
 from   datetime import datetime
 from   glob     import glob
+import numpy as np
 import os
+
+
+def Binarizar(Probabilidades, Grupos, PopulationBin): 
+    Puntero = 0
+    for Row in range(len(PopulationBin)):
+        for Col in range(len(PopulationBin[Row])):
+            Posicion = Grupos.labels_[Puntero]
+            if Posicion == -1 or Probabilidades[Posicion] > np.random.random():
+                if PopulationBin[Row][Col] == 0:
+                    PopulationBin[Row][Col] = 1
+                else:
+                    PopulationBin[Row][Col] = 0  
+            Puntero += 1
+    return PopulationBin
 
 def SelectMandatory(Constrains, MaxVariables, DirOutput):
     Mandatory = []
@@ -34,7 +49,7 @@ def Cronometro(Inicio):
 #------------------------------------------------------------------------------
 def GetBestKnown(Instancia):    
     print("Leyendo Best Known...")    
-    Instancia = Instancia.upper().replace("INPUT\\","")
+    Instancia = Instancia.upper().replace("INPUT/","")
     Archivo = open("Input/BestInstance.csv","r")
     Registro = Archivo.readline()
     while Registro != "":
@@ -48,9 +63,9 @@ def GetBestKnown(Instancia):
     return 0        
 #------------------------------------------------------------------------------
 def CreateDirectory(Instancia):  
-    print("Creando estructura de carpetas...")          
-    Instancia         = Instancia.replace("INPUT\\","").upper()
-    Instancia         = Instancia.replace(".TXT","")
+    print("Creando estructura de carpetas...", Instancia)          
+    Instancia         = Instancia.upper().replace("INPUT/","")
+    Instancia         = Instancia.upper().replace(".TXT","")
     #FileOutput        = Instancia + " " + time.strftime("%y%m%d %H%M")
     
     DirOutput         = "OUTPUT" # + Instancia #+ "/"
@@ -60,7 +75,7 @@ def CreateDirectory(Instancia):
     #    os.mkdir(DirOutput)
         
     DirOutput = DirOutput + "/" + Instancia + " - "
-    
+    #print("carpeta de salida:", DirOutput)
     for Archivo in glob(DirOutput + "*.TXT"):
         os.remove(Archivo)
         
@@ -87,10 +102,15 @@ def SaveInstance(Cost, Constrains, Restricciones, Coverage, DirOutput, Version):
 #------------------------------------------------------------------------------
 def ListadoInstancias(path, filtro):
     spath = path + filtro
+    print(spath)
     return glob(spath)  
 #------------------------------------------------------------------------------
-def ReadInstancia(Instancia):          
-    print("Leyendo Instancia...") 
+def ReadInstancia(Instancia):
+    """
+    Lee lor archivos OR y genera las correspondiente variables con los costos, restricciones, covertura y orden
+    Cost, Constrains, Coverage, Order
+    """          
+    print("Leyendo Instancia...", Instancia) 
     Archivo       = open(Instancia, "r")
         
     # Leer Dimensión
@@ -162,3 +182,53 @@ def ReadInstancia(Instancia):
 #                Order[Punt2] = Aux
     
     return Cost, Constrains, Coverage, Order
+
+def CumpleRestriccion(AgenteBin, Constrains):
+    Cont = 0
+    for Row in range(len(Constrains)):
+        Col = 0
+        while Col < len(Constrains[Row]):
+            if AgenteBin[Constrains[Row][Col]] == 1:
+                Cont += 1
+                Col   = len(Constrains[Row])    
+            Col += 1
+    return Cont == len(Constrains)
+
+def Quitar(AgenteBin, Mandatory, Constrains): 
+    for Col in range(len(AgenteBin)-1,-1,-1):
+        if AgenteBin[Col] == 1 and Mandatory[Col] == 0:
+            AgenteBin[Col] = 0
+            if not CumpleRestriccion(AgenteBin, Constrains):  
+                AgenteBin[Col] = 1
+    return AgenteBin
+#------------------------------------------------------------------------------  
+
+def QuitarExceso(PopulationBin, Mandatory, Constrains):
+    for Row in range(len(PopulationBin)):
+        PopulationBin[Row] = Quitar(PopulationBin[Row], Mandatory, Constrains)
+    return PopulationBin
+
+def FactibilizarAgente(solucion, Constrains): 
+    for Row in range(len(Constrains)):
+        Suma = 0
+        for Col in range(len(Constrains[Row])):
+            Suma += solucion[Constrains[Row][Col]]
+        if Suma == 0:
+            for Col in range(len(Constrains[Row])):
+                if solucion[Constrains[Row][Col]] == 0:
+                    solucion[Constrains[Row][Col]] = 1
+                    break
+    return solucion
+#------------------------------------------------------------------------------  
+
+def FactibilizaSolucion(solution, Constrains):
+     
+    if not CumpleRestriccion(solution, Constrains):            
+            solution = FactibilizarAgente(solution, Constrains)
+    return solution
+
+def FactibilizaPoblacion(solution, Constrains):
+    for Row in range(len(solution)):  
+        if not CumpleRestriccion(solution[Row], Constrains):            
+            solution[Row] = FactibilizarAgente(solution[Row], Constrains)
+    return solution

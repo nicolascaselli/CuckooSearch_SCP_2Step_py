@@ -7,10 +7,17 @@ https://www.sfu.ca/~ssurjano/index.html
 
 
 def calculation(array, t):#as you want
-    fitness = schwefel(array)
+    #fitness = schwefel(array)
+    fitness = costoTotalSCP(array, t)
     return fitness
 
 """Benchmark Functions"""
+
+def costoTotalSCP(solutions, cost):
+    Fit = np.sum(np.array(solutions) * np.array(cost))
+    #Fit = np.dot(np.array(solutions), np.array(cost))
+    #print("FIT: ", Fit)
+    return Fit
 def eggholder(array):
     z = - (array[1] + 47) * np.sin(np.sqrt(abs(array[1] + (array[0]/2) +47))) - array[0] *np.sin(np.sqrt(abs(array[0] - (array[1]+47))))
     return z

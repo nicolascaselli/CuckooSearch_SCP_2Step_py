@@ -2,6 +2,7 @@ import numpy as np
 import math
 from cuckooSearch.config import Config as cf
 from cuckooSearch import function as fn
+import scp.SCPTools as scpTools
 
 def levy_flight(Lambda):
     #generate step from levy distribution
@@ -17,8 +18,10 @@ def levy_flight(Lambda):
 
 class Individual:
     def __init__(self):
-        self.__position = np.random.rand(cf.get_dimension()) * (cf.get_max_domain() - cf.get_min_domain())  + cf.get_min_domain()
-        self.__fitness = fn.calculation(self.__position,0) # iteration = 0
+        #self.__position = np.random.rand(cf.get_dimension()) * (cf.get_max_domain() - cf.get_min_domain())  + cf.get_min_domain()
+        self.__position = np.random.randint(2, size=cf.get_dimension())
+        self.__position = scpTools.QuitarExceso(scpTools.FactibilizaSolucion(self.__position, cf.get_Restrictions()), cf.get_Mandatory(), cf.get_Restrictions())
+        self.__fitness = fn.calculation(self.__position,cf.get_Cost()) # iteration = 0
 
     def get_position(self):
         return self.__position
@@ -37,7 +40,10 @@ class Individual:
         for i in range(len(self.__position)):
             p = np.random.rand()
             if p < cf.get_Pa():
-                self.__position[i] = np.random.rand() * (cf.get_max_domain() - cf.get_min_domain())  + cf.get_min_domain()
+                self.__position[i] = np.random.randint(2)
+                self.__position[i] = 
+
+                #self.__position[i] = np.random.rand() * (cf.get_max_domain() - cf.get_min_domain())  + cf.get_min_domain()
 
     def get_cuckoo(self):
 

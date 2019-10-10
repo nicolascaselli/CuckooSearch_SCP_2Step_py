@@ -1,17 +1,37 @@
-from cuckooSearch import cs
-from scp import SCPTools as Tools
+from    cuckooSearch    import cs
+from cuckooSearch.config import Config as confCS
+import time
+from    glob            import glob
+from    scp             import SCPTools
+import os
 
 if __name__ == '__main__':
-    print('Hello World')
-    Instancias             = Tools.ListadoInstancias("INPUT/","M*.TXT")
-    Semilla                = 2019
+    print(glob(os.path.join('input/'+ "m*.txt")))
+    pathInstancias = os.path.join(os.getcwd(), 'input')
+    pathResultados = os.path.join(os.getcwd(), 'output')
+    #print("Extrayendo instancias desde el directorio:", pathInstancias)
+    #print("Dejando resultados en el directorio:", pathResultados)
+    
+    #print(glob(os.listdir(os.path.join(os.getcwd(), 'input', "/M*.TXT"))))
+    Instancias             = SCPTools.ListadoInstancias('input/',"m*.txt")
+    #print(len(Instancias))
     for Instancia in Instancias: 
-        Instancia, DirOutput                = Tools.CreateDirectory(Instancia)
-        BestKnown                           = Tools.GetBestKnown(Instancia)        
-        Cost, Constrains, Coverage, Order   = Tools.ReadInstancia("INPUT/" + Instancia + ".TXT")
+        print("ejecutando instancias")
+        Instancia, DirOutput                = SCPTools.CreateDirectory(Instancia)
+        BestKnown                           = SCPTools.GetBestKnown(Instancia)        
+        Cost, Constrains, Coverage, Order   = SCPTools.ReadInstancia(os.path.join(pathInstancias , Instancia) + ".txt")
         MaxVariables                        = len(Cost)
-        Restricciones                       = Tools.CreateRestricciones(Constrains, MaxVariables)
-        Mandatory                           = SelectMandatory(Constrains, MaxVariables, DirOutput)
-        Tools.SaveInstance(Cost, Constrains, Restricciones, Coverage, DirOutput, 1)
+        Restricciones                       = SCPTools.CreateRestricciones(Constrains, MaxVariables)
+        Mandatory                           = SCPTools.SelectMandatory(Constrains, MaxVariables, DirOutput)
+        SCPTools.SaveInstance(Cost, Constrains, Restricciones, Coverage, DirOutput, 1)
+        print(Instancia)
+        
+        confCS.set_trial(1)
+        confCS.set_iteration(100)
+        confCS.set_population_size(25)
+        confCS.set_Cost(Cost)
+        confCS.set_Restrictions(Restricciones)
+        print(MaxVariables)
+        confCS.set_dimension(MaxVariables)
         cs.run_CS()
     

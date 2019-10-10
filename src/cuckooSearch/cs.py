@@ -5,6 +5,7 @@ import sys
 import os
 import csv
 from cuckooSearch.config import Config as cf
+import time
 
 
 if os.path.exists("results"):
@@ -20,20 +21,22 @@ def run_CS():
     print(cf.get_trial())
     
     for trial in range(cf.get_trial()):
-        np.random.seed(trial)
+        cf.set_Seed(int(round(time.time(),0)))
+        np.random.seed(cf.get_Seed())
 
         results_list = [] # fitness list
         cs_list = []
         """Generate Initial Population"""
         for p in range(cf.get_population_size()):
             cs_list.append(id.Individual())
-
+        print("cs_list[0].get_position(): ",cs_list[0].get_position())    
+        print("len(cs_list[0].get_position()): ",len(cs_list[0].get_position()))
         """Sort List"""
         cs_list = sorted(cs_list, key=lambda ID: ID.get_fitness())
 
         """Find Initial Best"""
         BestPosition = cs_list[0].get_position()
-        BestFitness = fn.calculation(cs_list[0].get_position(),0)
+        BestFitness = fn.calculation(cs_list[0].get_position(),cf.get_Cost())
 
         """↓↓↓Main Loop↓↓↓"""
         for iteration in range(cf.get_iteration()):
@@ -41,7 +44,7 @@ def run_CS():
             """Generate New Solutions"""
             for i in range(len(cs_list)):
                 cs_list[i].get_cuckoo()
-                cs_list[i].set_fitness(fn.calculation(cs_list[i].get_position(),iteration))
+                cs_list[i].set_fitness(fn.calculation(cs_list[i].get_position(),cf.get_Cost()))
 
                 """random choice (say j)"""
                 j = np.random.randint(low=0, high=cf.get_population_size())
@@ -61,7 +64,7 @@ def run_CS():
                 r = np.random.rand()
                 if(r < cf.get_Pa()):
                     cs_list[a].abandon()
-                    cs_list[a].set_fitness(fn.calculation(cs_list[a].get_position(),iteration))
+                    cs_list[a].set_fitness(fn.calculation(cs_list[a].get_position(),cf.get_Cost()))
 
             """Sort to Find the Best"""
             cs_list = sorted(cs_list, key=lambda ID: ID.get_fitness())
