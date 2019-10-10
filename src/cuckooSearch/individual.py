@@ -41,7 +41,8 @@ class Individual:
             p = np.random.rand()
             if p < cf.get_Pa():
                 self.__position[i] = np.random.randint(2)
-                self.__position[i] = 
+        self.__position = scpTools.QuitarExceso(scpTools.FactibilizaSolucion(self.__position, cf.get_Restrictions()), cf.get_Mandatory(), cf.get_Restrictions())
+        
 
                 #self.__position[i] = np.random.rand() * (cf.get_max_domain() - cf.get_min_domain())  + cf.get_min_domain()
 
