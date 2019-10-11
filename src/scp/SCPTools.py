@@ -18,6 +18,9 @@ def Binarizar(Probabilidades, Grupos, PopulationBin):
     return PopulationBin
 
 def BinarizarPoblacion2step(poblacion): 
+    """
+        Función que recibe la poblacion de soluciones reales y transforma en binaria
+    """
     for Row in range(len(poblacion)):
         for Col in range(len(poblacion[Row])):
             if (poblacion[Row][Col] != 0) and (poblacion[Row][Col] != 1):
