@@ -17,6 +17,24 @@ def Binarizar(Probabilidades, Grupos, PopulationBin):
             Puntero += 1
     return PopulationBin
 
+def BinarizarPoblacion2step(poblacion): 
+    for Row in range(len(poblacion)):
+        for Col in range(len(poblacion[Row])):
+            if (poblacion[Row][Col] != 0) and (poblacion[Row][Col] != 1):
+                if poblacion[Row][Col] >= 0.5 :
+                    poblacion[Row][Col] = 1
+                else:
+                    poblacion[Row][Col] = 0
+
+    return poblacion
+
+def BinarizarSolucion2step(solucion): 
+    for Col in range(len(solucion)):
+            if solucion[Col] >= 0.5:
+                solucion[Col] = 1
+            else:
+                solucion[Col] = 0
+    return solucion
 def SelectMandatory(Constrains, MaxVariables, DirOutput):
     Mandatory = []
     for Punt in range(MaxVariables):

@@ -3,6 +3,7 @@ import math
 from cuckooSearch.config import Config as cf
 from cuckooSearch import function as fn
 import scp.SCPTools as scpTools
+from scp.SCPTools import Binarizar
 
 def levy_flight(Lambda):
     #generate step from levy distribution
@@ -59,7 +60,10 @@ class Individual:
                 self.__position[i] = cf.get_max_domain()
             if self.__position[i] < cf.get_min_domain():
                 self.__position[i] = cf.get_min_domain()
-
+                
+        self.__position = scpTools.BinarizarSolucion2step(self.__position)
+        self.__position = scpTools.QuitarExceso(scpTools.FactibilizaSolucion(self.__position, cf.get_Restrictions()), cf.get_Mandatory(), cf.get_Restrictions())
+        
     def print_info(self,i):
         print("id:","{0:3d}".format(i),
               "|| fitness:",str(self.__fitness).rjust(14," "),
