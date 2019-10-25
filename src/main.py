@@ -27,11 +27,13 @@ if __name__ == '__main__':
         print(Instancia)
         
         confCS.set_trial(1)
-        confCS.set_iteration(100)
+        confCS.set_iteration(2500)
         confCS.set_population_size(25)
         confCS.set_Cost(Cost)
         confCS.set_Restrictions(Restricciones)
-        print(MaxVariables)
+        confCS.set_Constrains(Constrains)
+        confCS.set_Mandatory(Mandatory)
+        print("MAAXVARIABLES: ", MaxVariables)
         confCS.set_dimension(MaxVariables)
         cs.run_CS()
     

@@ -21,7 +21,9 @@ class Individual:
     def __init__(self):
         #self.__position = np.random.rand(cf.get_dimension()) * (cf.get_max_domain() - cf.get_min_domain())  + cf.get_min_domain()
         self.__position = np.random.randint(2, size=cf.get_dimension())
-        self.__position = scpTools.QuitarExceso(scpTools.FactibilizaSolucion(self.__position, cf.get_Restrictions()), cf.get_Mandatory(), cf.get_Restrictions())
+        #self.__position = scpTools.QuitarExcesoSolucion(scpTools.FactibilizaSolucion(self.__position, cf.get_Restrictions()), cf.get_Mandatory(), cf.get_Restrictions())
+        self.__position = scpTools.FactibilizaSolucion(self.__position, cf.get_Constrains())
+        self.__position = scpTools.QuitarExcesoSolucion(self.__position, cf.get_Mandatory(), cf.get_Constrains())
         self.__fitness = fn.calculation(self.__position,cf.get_Cost()) # iteration = 0
 
     def get_position(self):
@@ -42,7 +44,7 @@ class Individual:
             p = np.random.rand()
             if p < cf.get_Pa():
                 self.__position[i] = np.random.randint(2)
-        self.__position = scpTools.QuitarExceso(scpTools.FactibilizaSolucion(self.__position, cf.get_Restrictions()), cf.get_Mandatory(), cf.get_Restrictions())
+        self.__position = scpTools.QuitarExcesoSolucion(scpTools.FactibilizaSolucion(self.__position, cf.get_Constrains()), cf.get_Mandatory(), cf.get_Constrains())
         
 
                 #self.__position[i] = np.random.rand() * (cf.get_max_domain() - cf.get_min_domain())  + cf.get_min_domain()
@@ -62,7 +64,7 @@ class Individual:
                 self.__position[i] = cf.get_min_domain()
                 
         self.__position = scpTools.BinarizarSolucion2step(self.__position)
-        self.__position = scpTools.QuitarExceso(scpTools.FactibilizaSolucion(self.__position, cf.get_Restrictions()), cf.get_Mandatory(), cf.get_Restrictions())
+        self.__position = scpTools.QuitarExcesoSolucion(scpTools.FactibilizaSolucion(self.__position, cf.get_Constrains()), cf.get_Mandatory(), cf.get_Constrains())
         
     def print_info(self,i):
         print("id:","{0:3d}".format(i),

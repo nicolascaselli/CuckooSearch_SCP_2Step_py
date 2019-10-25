@@ -19,7 +19,7 @@ results_writer = csv.writer(results, lineterminator="\n")
 
 def run_CS():
     print(cf.get_trial())
-    
+    valMuestreo = 99
     for trial in range(cf.get_trial()):
         cf.set_Seed(int(round(time.time(),0)))
         np.random.seed(cf.get_Seed())
@@ -73,8 +73,10 @@ def run_CS():
                 BestFitness = cs_list[0].get_fitness()
                 BestPosition = cs_list[0].get_position()
 
-            sys.stdout.write("\r Trial:%3d , Iteration:%7d, BestFitness:%.4f" % (trial , iteration, BestFitness))
-
+            if iteration>valMuestreo:
+                valMuestreo +=100
+                sys.stdout.write("\r Trial:%3d , Iteration:%7d, BestFitness:%.4f" % (trial , iteration, BestFitness))
+            
             results_list.append(str(BestFitness))
 
         results_writer.writerow(results_list)

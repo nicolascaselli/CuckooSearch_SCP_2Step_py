@@ -12,10 +12,19 @@ class Config:
     __Cost = []
     __Restrictions = []
     __Mandatory = []
+    __Constrains = []
 
     @classmethod
+    def get_Constrains(cls):
+        return cls.__Constrains
+    @classmethod
+    def set_Constrains (cls, _constrains):
+        cls.__Constrains = _constrains 
+    
+    
+    @classmethod
     def get_Mandatory(cls):
-        return cls._Mandatory
+        return cls.__Mandatory
     @classmethod
     def set_Mandatory(cls, _mandatory):
         cls.__Mandatory = _mandatory

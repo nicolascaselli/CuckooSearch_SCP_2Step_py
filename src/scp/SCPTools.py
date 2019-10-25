@@ -216,7 +216,7 @@ def CumpleRestriccion(AgenteBin, Constrains):
     return Cont == len(Constrains)
 
 def Quitar(AgenteBin, Mandatory, Constrains): 
-    for Col in range(len(AgenteBin)-1,-1,-1):
+    for Col in range(len(AgenteBin)):
         if AgenteBin[Col] == 1 and Mandatory[Col] == 0:
             AgenteBin[Col] = 0
             if not CumpleRestriccion(AgenteBin, Constrains):  
@@ -227,6 +227,11 @@ def Quitar(AgenteBin, Mandatory, Constrains):
 def QuitarExceso(PopulationBin, Mandatory, Constrains):
     for Row in range(len(PopulationBin)):
         PopulationBin[Row] = Quitar(PopulationBin[Row], Mandatory, Constrains)
+    return PopulationBin
+
+def QuitarExcesoSolucion(PopulationBin, Mandatory, Constrains):
+    
+    PopulationBin = Quitar(PopulationBin, Mandatory, Constrains)
     return PopulationBin
 
 def FactibilizarAgente(solucion, Constrains): 
@@ -240,6 +245,7 @@ def FactibilizarAgente(solucion, Constrains):
                     solucion[Constrains[Row][Col]] = 1
                     break
     return solucion
+
 #------------------------------------------------------------------------------  
 
 def FactibilizaSolucion(solution, Constrains):
