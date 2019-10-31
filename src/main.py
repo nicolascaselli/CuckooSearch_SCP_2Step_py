@@ -1,4 +1,5 @@
 from    cuckooSearch    import cs
+from cuckooSearch import cuckoosearch as csl
 from cuckooSearch.config import Config as confCS
 import time
 from    glob            import glob
@@ -33,7 +34,13 @@ if __name__ == '__main__':
         confCS.set_Restrictions(Restricciones)
         confCS.set_Constrains(Constrains)
         confCS.set_Mandatory(Mandatory)
+        confCS.lb = 0
+        confCS.ub = 1
+        confCS.dim = MaxVariables
+        confCS.n = 25
+        
         print("MAAXVARIABLES: ", MaxVariables)
         confCS.set_dimension(MaxVariables)
-        cs.run_CS()
+        csl.CS(getattr(SCPTools, "costoTotalSCP"), confCS.lb, confCS.ub, confCS.dim, confCS.n, confCS.get_iteration())
+        #cs.run_CS()
     

@@ -2,6 +2,7 @@ from   datetime import datetime
 from   glob     import glob
 import numpy as np
 import os
+from cuckooSearch.config import Config as confCS
 
 
 def Binarizar(Probabilidades, Grupos, PopulationBin): 
@@ -259,3 +260,11 @@ def FactibilizaPoblacion(solution, Constrains):
         if not CumpleRestriccion(solution[Row], Constrains):            
             solution[Row] = FactibilizarAgente(solution[Row], Constrains)
     return solution
+
+def costoTotalSCP(solutions):
+    """
+    Función fitness de SCP
+    """
+    Fit = np.sum(np.array(solutions) * np.array(confCS.get_Cost()))
+    return Fit
+
